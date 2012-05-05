@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 char dic[10000][16];
 
@@ -17,6 +18,8 @@ int main(int argc, char * const argv[])
     int count;
 
 
+    clock_t start_time=clock();
+    clock_t end_time;
     freopen("poj1035.in", "r", stdin);
     /*freopen("poj1035.out", "w", stdout);*/
     
@@ -77,6 +80,8 @@ int main(int argc, char * const argv[])
             printf("\n");
         }
     }
+    end_time=clock();
+    printf("time == %d\n", end_time-start_time);
     return 0;
 }
 
