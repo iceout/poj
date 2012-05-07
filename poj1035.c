@@ -7,6 +7,11 @@ int sorted[10000][2];
 
 int check(char *s, char *b, int small);
 
+int ncom(const void * p, const void * q)
+{
+    return *(int *)p - *(int *)q;
+}
+
 int comp(const void * p, const void * q)
 {
     if (((int *)p)[1] < ((int *)q)[1]) {
@@ -30,10 +35,13 @@ int main(int argc, char * const argv[])
     char word[16];
     int lenword = 0;
     int replace[10000];
-    /*int t;*/
+    int t;
     int count;
     int first, mid, last;
-   
+
+    freopen("poj1035.in", "r", stdin);
+    /*freopen("poj1035.out", "w", stdout);*/
+    
     /*Read the dict*/
     while (1 == 1) {
         scanf("%s", dic[numdic]);
@@ -96,11 +104,17 @@ int main(int argc, char * const argv[])
         /*memset(replace, -1, 10000);*/
         count = -1;
         i = -1;
+        t = 0;
         while (++i < numdic && sorted[i][1] < lenword-1) {
             /* code */
         }
         while (i < numdic) {
-            if (lenword == sorted[i][1]) {
+            if (lenword-1 == sorted[i][1]) {
+                if (check(dic[sorted[i][0]], word, lenword-1) == 1) {
+                    replace[t++] = sorted[i][0];
+                }
+            }
+            else if (lenword == sorted[i][1]) {
                 count = 0;
                 for (j = 0; j < lenword; j++) {
                     if (word[j] != dic[sorted[i][0]][j]) {
@@ -108,17 +122,12 @@ int main(int argc, char * const argv[])
                     }
                 }
                 if (count == 1){
-                    replace[sorted[i][0]] = 1;
+                    replace[t++] = sorted[i][0];
                 }
             }
             else if (lenword+1 == sorted[i][1]) {
                 if (check(word, dic[sorted[i][0]], lenword) == 1) {
-                    replace[sorted[i][0]] = 1;
-                }
-            }
-            else if (lenword-1 == sorted[i][1]) {
-                if (check(dic[sorted[i][0]], word, lenword-1) == 1) {
-                    replace[sorted[i][0]] = 1;
+                    replace[t++] = sorted[i][0];
                 }
             }
             else {
@@ -127,14 +136,11 @@ int main(int argc, char * const argv[])
             i++;
         }
         if (count != 0) {
+            qsort(replace, t, sizeof(int), ncom);
             printf(":");
             j = 0;
-            while (j < numdic) {
-                if (replace[j] == 1) {
-                    printf(" %s", dic[j]);
-                    replace[j] = 0;
-                }
-                j++;
+            while (j < t) {
+                printf(" %s", dic[replace[j++]]);
             }
             printf("\n");
         }
